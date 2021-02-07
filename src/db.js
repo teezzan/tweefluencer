@@ -1,5 +1,5 @@
 var mongoose = require("mongoose");
-let MONGO_URL = process.env.MONGO_URL || "mongodb://localhost:27017/tweefluence2s"
+let MONGO_URL = "mongodb://localhost:27017/isolate"
 mongoose.connect(
   MONGO_URL,
   {

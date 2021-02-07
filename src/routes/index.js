@@ -10,11 +10,18 @@ router.get("/greet", (req, res) => {
 
 router.post("/register", (req, res) => {
     UserController.create(req.body).then((response) => {
-        res.status(200).json(response);
+        res.status(201).json(response);
     }).catch(err => {
         res.status(err.code).json(err);
     })
 });
 
+router.post("/login", (req, res) => {
+    UserController.login(req.body).then((response) => {
+        res.status(200).json(response);
+    }).catch(err => {
+        res.status(err.code).json(err);
+    })
+});
 
 module.exports = router;

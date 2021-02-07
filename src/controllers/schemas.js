@@ -12,7 +12,7 @@ module.exports = {
 
         }),
         authentication: Joi.object().keys({
-            email: Joi.string().regex(EMAIL_REGEX).email().required(),
+            email: Joi.string().email().required(),
             password: Joi.string().regex(/^[\x20-\x7E]+$/).min(8).max(72).required()
         })
     }
