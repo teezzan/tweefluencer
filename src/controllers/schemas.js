@@ -14,6 +14,10 @@ module.exports = {
         authentication: Joi.object().keys({
             email: Joi.string().email().required(),
             password: Joi.string().regex(/^[\x20-\x7E]+$/).min(8).max(72).required()
+        }),
+        passwordRetrieval: Joi.object().keys({
+            email: Joi.string().email().required()
         })
+
     }
 }
