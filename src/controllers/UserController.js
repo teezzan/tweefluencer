@@ -37,7 +37,7 @@ let composePassMail = (payload) => {
     </p>`;
     return mailbody
 }
-let resolveToken = async ({ token }) => {
+exports.resolveToken = async ({ token }) => {
     try {
         const decoded = await new Promise((resolve, reject) => {
             jwt.verify(token, JWT_SECRET, (err, decoded) => {
@@ -54,9 +54,9 @@ let resolveToken = async ({ token }) => {
 
 }
 
-exports.greet = async () => {
+exports.greet = async (ctx) => {
     return new Promise((resolve, reject) => {
-        resolve({ say: 'helloworld' });
+        resolve({ say: 'helloworld', ctx });
     })
 }
 
@@ -143,7 +143,7 @@ exports.forgetPassword = async (payload) => {
 exports.verifyPasswordToken = async (token) => {
 
     return new Promise(async (resolve, reject) => {
-        let payload = await resolveToken(token);
+        let payload = await this.resolveToken(token);
         if (!payload)
             return reject({ status: 'error', message: "UnAuthorized", code: 401 });
         let { id, name, phone } = payload;
@@ -154,5 +154,39 @@ exports.verifyPasswordToken = async (token) => {
 
         return resolve({ status: true })
 
+    })
+}
+
+exports.changePassword = async ({ token, password }) => {
+
+    return new Promise(async (resolve, reject) => {
+        console.log(token)
+        let payload = await this.resolveToken({ token });
+        if (!payload)
+            return reject({ status: 'error', message: "UnAuthorized", code: 401 });
+        let { id, name, phone } = payload;
+
+        user = await User.findOne({ _id: id, name, phone });
+        if (!user)
+            return reject({ status: 'error', message: "User Does not Exist", code: 401 });
+
+        await User.updateOne({ _id: id }, {
+            password: bcrypt.hashSync(password, 10)
+        })
+
+        return resolve({ status: "success" })
+
+    })
+}
+
+exports.editUser = async (ctx, payload) => {
+    return new Promise(async (resolve, reject) => {
+        let { name, email, phone, password } = payload;
+        let found = await User.findOne({ $or: [{ email }, { phone }] });
+        if (found)
+            return reject({ status: 'error', message: "Email/Phone Already Registered", code: 422 });
+        let user = await User.findByIdAndUpdate(ctx.user.id, payload)
+
+        resolve({ user })
     })
 }
