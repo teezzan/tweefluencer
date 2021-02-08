@@ -17,7 +17,14 @@ module.exports = {
         }),
         passwordRetrieval: Joi.object().keys({
             email: Joi.string().email().required()
-        })
+        }),
+        accountEdit: Joi.object().keys({
+            name: Joi.string().min(1).optional(),
+            email: Joi.string().email().optional(),
+            password: Joi.string().regex(/^[\x20-\x7E]+$/).min(8).max(72).optional(),
+            phone: Joi.string().min(9).max(12).optional()
+
+        }),
 
     }
 }

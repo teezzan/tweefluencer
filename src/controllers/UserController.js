@@ -18,7 +18,7 @@ let generateJWT = (user) => {
 
     return jwt.sign({
         id: user.id,
-        username: user.email,
+        email: user.email,
         exp: Math.floor(exp.getTime() / 1000)
     }, JWT_SECRET);
 };
@@ -66,7 +66,7 @@ exports.create = async (payload) => {
         const { error } = schemas.user.accountCreation.validate(payload);
 
         if (error !== undefined)
-            return reject({ status: 'error', message: error.details.message, code: 422 });
+            return reject({ status: 'error', message: error.message, code: 422 });
         let { email, password, firstname, lastname, phone } = payload;
         let found = await User.findOne({ $or: [{ email }, { phone }] });
         if (found)
@@ -87,7 +87,7 @@ exports.login = async (payload) => {
         const { error } = schemas.user.authentication.validate(payload);
 
         if (error !== undefined)
-            return reject({ status: 'error', message: error.details.message, code: 422 });
+            return reject({ status: 'error', message: error.message, code: 422 });
         let { email, password } = payload;
         let found = await User.findOne({ email });
         if (!found)
@@ -111,7 +111,7 @@ exports.forgetPassword = async (payload) => {
         const { error } = schemas.user.passwordRetrieval.validate(payload);
 
         if (error !== undefined)
-            return reject({ status: 'error', message: error.details.message, code: 422 });
+            return reject({ status: 'error', message: error.message, code: 422 });
         let { email } = payload;
         let user = await User.findOne({ email });
         if (!user)
@@ -160,7 +160,6 @@ exports.verifyPasswordToken = async (token) => {
 exports.changePassword = async ({ token, password }) => {
 
     return new Promise(async (resolve, reject) => {
-        console.log(token)
         let payload = await this.resolveToken({ token });
         if (!payload)
             return reject({ status: 'error', message: "UnAuthorized", code: 401 });
@@ -181,12 +180,18 @@ exports.changePassword = async ({ token, password }) => {
 
 exports.editUser = async (ctx, payload) => {
     return new Promise(async (resolve, reject) => {
+        const { error } = schemas.user.accountEdit.validate(payload);
+        if (error !== undefined)
+            return reject({ status: 'error', message: error.message, code: 422 });
+
         let { name, email, phone, password } = payload;
         let found = await User.findOne({ $or: [{ email }, { phone }] });
-        if (found)
+        if (found && found.id !== ctx.user.id)
             return reject({ status: 'error', message: "Email/Phone Already Registered", code: 422 });
-        let user = await User.findByIdAndUpdate(ctx.user.id, payload)
+        if (password)
+            payload.password = bcrypt.hashSync(password, 10);
+        let user = await User.findByIdAndUpdate(ctx.user.id, payload, { new: true })
 
-        resolve({ user })
+        resolve({ user: await publify(found, public_fields) })
     })
 }

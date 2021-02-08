@@ -21,12 +21,14 @@ let authenticate = async function (req, res, next) {
 
     next()
 }
+
 let authorize = async function (req, res, next) {
 
     if (req.ctx.auth == false) {
         res.status(401).json({ message: "UnAuthorized" })
         return
     }
+    console.log("Authorized as ", req.ctx.user.email);
     next()
 }
 
@@ -75,12 +77,21 @@ router.get("/verify", (req, res) => {
 });
 
 router.post("/change_pass", (req, res) => {
-    console.log(req.body)
     UserController.changePassword(req.body).then((response) => {
         res.status(200).json(response);
     }).catch(err => {
         res.status(err.code).json(err);
     })
 });
+
+router.post("/updateme", authorize, (req, res) => {
+
+    UserController.editUser(req.ctx, req.body).then((response) => {
+        res.status(200).json(response);
+    }).catch(err => {
+        res.status(err.code).json(err);
+    })
+});
+
 
 module.exports = router;
