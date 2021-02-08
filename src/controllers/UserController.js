@@ -5,7 +5,7 @@ let schemas = require('./schemas');
 let bcrypt = require('bcryptjs');
 let jwt = require('jsonwebtoken');
 let _ = require('lodash');
-const { reject } = require('lodash');
+const _ = require('lodash');
 
 let JWT_SECRET = process.env.JWT_SECRET || "jwt-test-secret";
 let public_fields = ["id", "name", "email", "phone"];
@@ -101,9 +101,6 @@ exports.login = async (payload) => {
 
     )
 }
-
-
-
 
 exports.forgetPassword = async (payload) => {
 
