@@ -1,4 +1,4 @@
-process.env.MONGO_URL = "mongodb://localhost:27017/addressDb1"
+require('dotenv').config();
 let db = require("./src/db");
 let app = require("./src/app");
 let port = process.env.PORT || 3000;

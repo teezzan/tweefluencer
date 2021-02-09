@@ -1,15 +1,14 @@
-let axios = require('axios');
-let User = require("../models/User");
 const Joi = require('joi');
+let _ = require('lodash');
 let schemas = require('./schemas');
 let bcrypt = require('bcryptjs');
 let jwt = require('jsonwebtoken');
-let _ = require('lodash');
-const _ = require('lodash');
+let User = require("../models/User");
 
 let JWT_SECRET = process.env.JWT_SECRET || "jwt-test-secret";
 let public_fields = ["id", "name", "email", "phone"];
 let server = "localhost:3000"
+
 
 let generateJWT = (user) => {
     const today = new Date();
@@ -37,6 +36,9 @@ let composePassMail = (payload) => {
     </p>`;
     return mailbody
 }
+
+
+
 exports.resolveToken = async ({ token }) => {
     try {
         const decoded = await new Promise((resolve, reject) => {

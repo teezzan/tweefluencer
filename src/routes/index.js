@@ -1,5 +1,6 @@
 var express = require("express");
 var UserController = require("../controllers/UserController.js");
+var TaskController = require("../controllers/TaskController.js");
 const router = express.Router();
 let bodyParser = require("body-parser");
 
@@ -93,5 +94,29 @@ router.post("/updateme", authorize, (req, res) => {
     })
 });
 
+router.post("/create", authorize, (req, res) => {
+    TaskController.createInfluence(req.ctx, req.body).then((response) => {
+        res.status(201).json(response);
+    }).catch(err => {
+        res.status(err.code).json(err);
+    })
+})
+
+router.get("/pay/:id", authorize, (req, res) => {
+    TaskController.generatePaymentLink(req.ctx, req.params.id).then((response) => {
+        res.status(200).json(response);
+    }).catch(err => {
+        res.status(err.code).json(err);
+    })
+})
+
+
+router.post("/hook", (req, res) => {
+    TaskController.hook(req).then((response) => {
+        res.status(200).json(response);
+    }).catch(err => {
+        res.status(err.code).json(err);
+    })
+});
 
 module.exports = router;

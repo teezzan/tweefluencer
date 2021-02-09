@@ -1,5 +1,4 @@
 const Joi = require('joi');
-let EMAIL_REGEX = new RegExp(`/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/`)
 
 module.exports = {
     user: {
@@ -26,5 +25,13 @@ module.exports = {
 
         }),
 
+    },
+    influence: {
+        create: Joi.object().keys({
+            keyword: Joi.string().required(),
+            goal: Joi.number().min(10).required(),
+            tweet_id: Joi.string().min(8).optional(),
+            winners_num: Joi.number().min(1).optional(),
+        }),
     }
 }
