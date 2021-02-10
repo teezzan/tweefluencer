@@ -112,7 +112,7 @@ exports.getInfluence = async (ctx, _id) => {
     return new Promise(async (resolve, reject) => {
         try {
             let influence = await InfluenceModel.findOne({ user: ctx.user.id, _id });
-            if (influence)
+            if (!influence)
                 return reject({ status: "error", message: "Not Found", code: 404 });
 
             return resolve({ status: "success", influence })
