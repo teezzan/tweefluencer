@@ -127,6 +127,14 @@ router.get("/influence/:id", authorize, (req, res) => {
     })
 })
 
+router.delete("/influence/:id", authorize, (req, res) => {
+    TaskController.deleteInfluence(req.ctx, req.params.id).then((response) => {
+        res.status(200).json(response);
+    }).catch(err => {
+        res.status(err.code).json(err);
+    })
+})
+
 router.get("/influence", authorize, (req, res) => {
     TaskController.getAllInfluence(req.ctx).then((response) => {
         res.status(200).json(response);
