@@ -125,7 +125,7 @@ exports.getInfluence = async (ctx, _id) => {
     })
 }
 
-exports.getAllInfluence = async (ctx, _id) => {
+exports.getAllInfluence = async (ctx) => {
     return new Promise(async (resolve, reject) => {
         try {
             let influences = await InfluenceModel.find({ user: ctx.user.id }).sort([['createdAt', -1]]);
