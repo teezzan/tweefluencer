@@ -88,7 +88,7 @@ exports.hook = async (req) => {
             // let amount = data.amount / 100; //naira-centric
             let influence = await InfluenceModel.findByIdAndUpdate(id, { new: true }, {
                 $set: {
-                    payment_ref = reference
+                    payment_ref: reference
                 }
             });
 
@@ -104,6 +104,37 @@ exports.hook = async (req) => {
 
 
         return reject({ status: 200 });
+
+    })
+}
+
+exports.getInfluence = async (ctx, _id) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            let influence = await InfluenceModel.findOne({ user: ctx.user.id, _id });
+            if (influence)
+                return reject({ status: "error", message: "Not Found", code: 404 });
+
+            return resolve({ status: "success", influence })
+        }
+        catch (err) {
+            return reject({ status: "error", message: "Internal Server Error", code: 500 })
+        }
+
+
+    })
+}
+
+exports.getAllInfluence = async (ctx, _id) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            let influences = await InfluenceModel.find({ user: ctx.user.id }).sort([['createdAt', -1]]);
+            return resolve({ status: "success", influences })
+
+        }
+        catch (err) {
+            return reject({ status: "error", message: "Internal Server Error", code: 500 })
+        }
 
     })
 }
