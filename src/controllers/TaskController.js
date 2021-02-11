@@ -153,3 +153,22 @@ exports.deleteInfluence = async (ctx, _id) => {
 
     })
 }
+
+exports.completeInfluence = async (ctx, _id) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            await InfluenceModel.findOneAndUpdate({ user: ctx.user.id, _id }, {
+                $set: {
+                    completed: true
+                }
+            });
+
+            return resolve({ status: "success" })
+        }
+        catch (err) {
+            return reject({ status: "error", message: "Internal Server Error", code: 500 })
+        }
+
+
+    })
+}

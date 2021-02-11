@@ -127,6 +127,14 @@ router.get("/influence/:id", authorize, (req, res) => {
     })
 })
 
+router.get("/influence", authorize, (req, res) => {
+    TaskController.getAllInfluence(req.ctx).then((response) => {
+        res.status(200).json(response);
+    }).catch(err => {
+        res.status(err.code).json(err);
+    })
+})
+
 router.delete("/influence/:id", authorize, (req, res) => {
     TaskController.deleteInfluence(req.ctx, req.params.id).then((response) => {
         res.status(200).json(response);
@@ -135,12 +143,13 @@ router.delete("/influence/:id", authorize, (req, res) => {
     })
 })
 
-router.get("/influence", authorize, (req, res) => {
-    TaskController.getAllInfluence(req.ctx).then((response) => {
-        res.status(200).json(response);
+router.patch("/influence/:id", authorize, (req, res) => {
+    TaskController.completeInfluence(req.ctx, req.params.id).then((response) => {
+        res.status(202).json(response);
     }).catch(err => {
         res.status(err.code).json(err);
     })
 })
+
 
 module.exports = router;
