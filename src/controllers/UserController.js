@@ -191,6 +191,17 @@ exports.editUser = async (ctx, payload) => {
             payload.password = bcrypt.hashSync(password, 10);
         let user = await User.findByIdAndUpdate(ctx.user.id, payload, { new: true })
 
+        resolve({ user: await publify(user, public_fields) })
+    })
+}
+
+exports.me = async (ctx) => {
+    return new Promise(async (resolve, reject) => {
+
+        let found = await User.findById(ctx.user.id);
+        if (!found)
+            return reject({ status: 'error', message: "Not Found", code: 404 });
+
         resolve({ user: await publify(found, public_fields) })
     })
 }

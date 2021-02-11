@@ -77,8 +77,18 @@ router.get("/verify", (req, res) => {
     })
 });
 
+
+
 router.post("/change_pass", (req, res) => {
     UserController.changePassword(req.body).then((response) => {
+        res.status(200).json(response);
+    }).catch(err => {
+        res.status(err.code).json(err);
+    })
+});
+
+router.get("/me", authorize, (req, res) => {
+    UserController.me(req.ctx).then((response) => {
         res.status(200).json(response);
     }).catch(err => {
         res.status(err.code).json(err);
