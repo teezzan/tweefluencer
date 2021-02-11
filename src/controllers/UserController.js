@@ -7,7 +7,7 @@ let User = require("../models/User");
 
 let JWT_SECRET = process.env.JWT_SECRET || "jwt-test-secret";
 let public_fields = ["id", "name", "email", "phone"];
-let server = "localhost:3000"
+let server = process.env.SERVER || "localhost:3000"
 
 
 let generateJWT = (user) => {

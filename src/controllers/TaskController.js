@@ -5,7 +5,9 @@ const schemas = require("./schemas");
 const task_queue = "influence_task_queue"
 const paystack_private_key = process.env.PAYSTACK_PRIVATE_KEY
 const paystack_public_key = process.env.PAYSTACK_PUBLIC_KEY
-let crypto = require('crypto')
+let crypto = require('crypto');
+let tweet_rate = process.env.TWEET_RATE
+let hashtag_rate = process.env.HASHTAG_RATE
 
 
 exports.createInfluence = async (ctx, payload) => {
@@ -18,9 +20,9 @@ exports.createInfluence = async (ctx, payload) => {
 
         //calculate cost
         if (value.tweet_id)
-            value.cost = value.goal * 150;
+            value.cost = value.goal * tweet_rate;
         else {
-            value.cost = value.goal * 120;
+            value.cost = value.goal * hashtag_rate;
         }
         value.user = ctx.user.id;
 
